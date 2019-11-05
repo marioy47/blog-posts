@@ -22,19 +22,21 @@ A basic understanding of [React.js](reactjs.org) is a plus, since _Gatsby_ is ba
 
 ## So what is Gatsby?
 
-Well, [Gatsby](https://gatsbyjs.org) is a static content generator much like [Jekyll](https://jekyllrb.com/) and [Hugo](https://gohugo.io) but written in JavaScript.
+Well, [Gatsby](https://gatsbyjs.org) is a static content generator much like [Jekyll](https://jekyllrb.com/) and [Hugo](https://gohugo.io) but written in JavaScript and with a few added beneffits (more on that latter).
 
 _Static Content Generator_ means that **Gatsby** takes a bunch of files written in languages like PHP, Ruby, ES6, Markdown, etc. And _compiles_ them into HTML and Vanilla Javascript. Which is great, because there is nothing more performant that plain old html.
 
 Gatsby **compiles** your JavaScript _scripts_ and Markdown files into HTML. So you can have **reusable components**, like headers, footers, sidebars, sliders, etc. That can be re-used throughout your site but without the need of a dynamic content management system.
 
-What sets Gatsby apart is that is written in JavaScript and uses using React for its components! This means that your reusable components can (and have to) be React Components.
+What sets Gatsby apart is that is written in JavaScript using React for its components!. This means that your reusable components can (and have to) be React Components.
+
+Also, gatsby compiles and composes the resulting HTML in a way that is friendly with search engines, and that the JavaScript is included in a way that degrades or upgrades depending on the browser.
 
 > Remember, your components are written in React (JSX) but compiled and render on the server.
 
 ## Setup Development
 
-I know I said that `node` and `npm` are pre-requisites, but in case you are looking for a quick script on how to install it, here are the step to do it using [Homebrew](https://brew.sh)
+I know I said that `node` and `npm` are pre-requisites, but in case you are looking for a quick script on how to install it, here are the step to do it using [Homebrew](https://brew.sh) on a Mac.
 
 ```bash
 brew update
@@ -51,7 +53,7 @@ code --install-extension esbenp.prettier-vscode
 Now that we have our pre-requisites installed, lets install the Gatsby Command Line or `gatsby-cli`
 
 ```bash
-npm install -g gatsby-cli
+npx install -g gatsby-cli
 ```
 
 The `-g` means that you'll have `gatsby` as a global command line executable. Which is evident by he `gatsby --help` command above.
