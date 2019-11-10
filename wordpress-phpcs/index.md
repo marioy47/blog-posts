@@ -1,10 +1,14 @@
-# Using PHPCS to manage coding standards in Wordpress
+---
+title: Using PHP_CodeSniffer to manage coding standards for WordPress Development
+---
+
+# Using PHP_CodeSniffer to manage coding standards for WordPress Development
 
 ## Start the project
 
-`composer init`
+    composer init
 
-I dinn't defined dependencies just yet.
+I didn't defined dependencies just yet.
 
 ```composer.json
 {
@@ -23,7 +27,7 @@ I dinn't defined dependencies just yet.
 
 ## Install PHPCS Composer Installer
 
-```install.sh
+```shell
 composer require --dev 'dealerdirect/phpcodesniffer-composer-installer:*'
 ```
 
@@ -31,7 +35,7 @@ Add the following scripts to `composer.json`
 
 ```composer.json
 {
-  // Add the following scripts
+  // ...
   "scripts": {
     "install-codestandards": [
       "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
@@ -48,24 +52,24 @@ Add the following scripts to `composer.json`
 We'll be installing
 
 - PHP Version Compatibility Checks
-- Wordpress Compabitibility Test
+- Wordpress Compatibility Test
 - Empty and unused variables analysis
 - Wordpress Coding Standards
 
-```install.sh
+```shell
 composer require --dev 'phpcompatibility/php-compatibility:*' \
   'phpcompatibility/phpcompatibility-wp:*'  \
   'sirbrillig/phpcs-variable-analysis:*' \
   'wp-coding-standards/wpcs:*'
 ```
 
-Add the follogin in the **scripts** section in `composer.json`
+Add the following in the **scripts** section in `composer.json`
 
 ```composer.json
 {
   // ..
   "scripts": {
-    // Add this two commands.
+    // Add this three commands.
     "phpcs": "phpcs",
     "phpcs-i": "phpcs -i",
     "phpcbf": "phpcbf"
@@ -73,10 +77,10 @@ Add the follogin in the **scripts** section in `composer.json`
 }
 ```
 
-To validate that you have installed all the required standards you should execute `phpcs -i` but since we have _phpcs_ installed only locall y we created the `composer phpcs-i` command. That will list the **locally** installed standards.
+To validate that you have installed all the required standards you should execute `phpcs -i` but since we have _phpcs_ installed only locally we created the `composer phpcs-i` command. That will list the **locally** installed standards.
 
-```test.txt
-wordpress-phpcs(drafts) ✗: composer phpcs-i
+```shell
+$ composer phpcs-i
 > phpcs -i
 The installed coding standards are PEAR, Zend, PSR2, MySource, Squiz, PSR1, PSR12, PHPCompatibility, PHPCompatibilityParagonieRandomCompat, PHPCompatibilityParagonieSodiumCompat, PHPCompatibilityWP, VariableAnalysis, WordPress, WordPress-Extra, WordPress-Docs and WordPress-Core
 ```
@@ -93,12 +97,14 @@ function my_FunctionOne()
 $b;
     // This is a test
 return ""}
+
+?>
 ```
 
 and in the terminal run `composer phpcs` to verify that its workgin. You should get something like:
 
-```bash
-wordpress-phpcs(drafts) ✗: composer phpcs phpcs-test.php
+```shell
+$ composer phpcs phpcs-test.php
 > phpcs 'phpcs-test.php'
 
 FILE: /Users/Mario/Projects/blog-posts/wordpress-phpcs/phpcs-test.php
@@ -127,11 +133,11 @@ Time: 45ms; Memory: 4MB
 Script phpcs handling the phpcs event returned with error code 2
 ```
 
-If you are familiar with Wordpress Standards, you can see that the WP Codding standars are not being applied. To that we have to create 2 new commands.
+If you are familiar with Wordpress Standards, you can see that the WP Coding Standards are not being applied. To that we have to create 2 new commands.
 
 ## Using Wordpress Standards
 
-Add the folloing 2 commands to the **scripts** section in the `composer.json` file.
+Add the following 2 commands to the **scripts** section in the `composer.json` file.
 
 ```composer.json
 {
@@ -246,7 +252,6 @@ Next, there is a minimal configuration that does the following:
   <exclude-pattern>/vendor/*</exclude-pattern>
 </ruleset>
 ```
-
 
 Now you can execute `composer phpcs` without any arguments and it will validate agaings Wordpress and any aditional rule you've configured
 

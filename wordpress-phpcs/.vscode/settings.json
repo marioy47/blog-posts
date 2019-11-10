@@ -1,6 +1,0 @@
-{
-  "[php]": {
-    "editor.defaultFormatter": "wongjn.php-sniffer"
-  },
-  "phpSniffer.executablesFolder": "vendor/bin/"
-}
