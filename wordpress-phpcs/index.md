@@ -155,10 +155,10 @@ Add the following 2 commands to the **scripts** section in the `composer.json` f
 
 ```
 
-And execute `composer phpcs-wp phpcs-test.php` to make the check but using wordpress standards
+And execute `composer phpcs-wp phpcs-test.php` to make the check but using WordPress standards
 
 ```bash
-wordpress-phpcs(drafts) ✗: composer phpcs-wp phpcs-test.php
+$ composer phpcs-wp phpcs-test.php
 > phpcs --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core 'phpcs-test.php'
 
 FILE: /Users/Mario/Projects/blog-posts/wordpress-phpcs/phpcs-test.php
@@ -196,7 +196,7 @@ Time: 207ms; Memory: 8MB
 Script phpcs --standard=WordPress,WordPress-Extra,WordPress-Docs,WordPress-Core handling the phpcs-wp event returned with error code 2
 ```
 
-NOW we are applying WordPress standards.
+NOW we are applying WordPress standards!.
 
 But there are some thing that we're still not validating, like _language namespace_. And adding those options here is overkill.
 
@@ -209,7 +209,7 @@ Next, there is a minimal configuration that does the following:
 - Verifies that we're using Wordpress <= 5.1 and PHP >= 7.0
 - That the text domain is `text-domain`
 - All files to verify are in `/app` and `plugin-start-file.php``
-- Ignores everyting in `/Docker`, `/vendor`, `/test`, `/node_modules`
+- Ignores everything in `/Docker`, `/vendor`, `/test`, `/node_modules`
 
 ```phpcs.xml
 <?xml version="1.0"?>
@@ -253,17 +253,17 @@ Next, there is a minimal configuration that does the following:
 </ruleset>
 ```
 
-Now you can execute `composer phpcs` without any arguments and it will validate agaings Wordpress and any aditional rule you've configured
+Now you can execute `composer phpcs` without any arguments and it will validate against Wordpress and any additional rule you've configured
 
 ## Visual Studio Code
 
-There are a couple of extensions that work with `phpcs` but at the time of this writing the most updated one was `wongjn.php-sniffer` which can be installed with the following comand:
+There are a couple of extensions that work with `phpcs` but at the time of this writing the most updated one was `wongjn.php-sniffer` which can be installed with the following command:
 
 ```install.sh
 code --install-extension wongjn.php-sniffer
 ```
 
-And since you are using a locally installed `phpcs` you should make the follogin configuration in _Visual Studio Code_ by editing the file `.vscode/settings.json` and adding the following:
+And since you are using a locally installed `phpcs` you should make the following configuration in _Visual Studio Code_ by editing the file `.vscode/settings.json` and adding the following:
 
 ```.vscode/settings.json
 {
@@ -274,3 +274,7 @@ And since you are using a locally installed `phpcs` you should make the follogin
   "phpSniffer.executablesFolder": "vendor/bin/"
 }
 ```
+
+## Starter Project
+
+Since this are too many files to take care of, and many commands just to start a project, I've created a [Wordpress Starter Project](https./)
