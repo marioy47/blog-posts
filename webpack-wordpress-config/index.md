@@ -1,9 +1,11 @@
 ---
 title: Using Webpack to compile Javascript in an Wordpress Plugin
-permalink: webpack-compile-wordpress-plugin
+cover: webpack-logo.png
+tags: webpack, wordpress, development, node
+date: 2019-10-28
 ---
 
-## InstallationInstallationInstallationInstallation
+## Installation
 
 ```bash
 npm init -y
@@ -24,59 +26,62 @@ npm install --save-dev babel-loader @babel/core @babel/cli @babel/preset-env
 ![Run webpack and get an error]()
 
 ## WebPack config
+
 Create a hello file
+
 ```javascript
-const path = require('path');
+const path = require("path")
 
 module.exports = {
-  entry: './src/js/frontend.js',
+  entry: "./src/js/frontend.js",
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'js')
-  }
-};
-
+    filename: "[name].js",
+    path: path.resolve(__dirname, "js"),
+  },
+}
 ```
-[Image with both codes and the webpack output]()
+
+![Image with both codes and the webpack output]()
 
 ## Specify names
 
 ```javascript
-const path = require('path');
+const path = require("path")
 
 module.exports = {
   entry: {
-    frontend: './src/js/frontend.js'
+    frontend: "./src/js/frontend.js",
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'js')
-  }
-};
+    filename: "[name].js",
+    path: path.resolve(__dirname, "js"),
+  },
+}
 ```
 
 ## Adding babel
+
 ```javascript
-const path = require('path');
+const path = require("path")
 
 module.exports = {
   entry: {
-    frontend: './src/js/frontend.js'
+    frontend: "./src/js/frontend.js",
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'js')
+    filename: "[name].js",
+    path: path.resolve(__dirname, "js"),
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
-  }
-};
+        loader: "babel-loader",
+      },
+    ],
+  },
+}
 ```
 
 ## Develop vs Build
@@ -88,8 +93,8 @@ module.exports = {
   },
 ```
 
-
 ## SASS
+
 ```bash
 npm install sass-loader node-sass extract-loader file-loader --save-dev
 ```
