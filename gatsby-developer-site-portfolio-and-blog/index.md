@@ -28,7 +28,9 @@ npm start
 
 If you know a little about Gatsby, notice that I didn't provided an starter theme. That means that I'm using the **default starter theme**
 
-If you want to build an take a peek at what will be deployed, then issue the `build` command and open a local http server:
+The `code` comand is to install prettier for Visual Studio Code in case you don't have it already.
+
+If you want to build an take a peek at what will be deployed, then don't execute `npm start` but the `npm run build` command and then open a local http server (here I'm using python):
 
 ```shell
 npm run build
@@ -36,9 +38,11 @@ cd build
 python -m SimpleHTTPServer 9000
 ```
 
-## Configure the blog metadata to make it more SEO friendly
+Then open a browser and point it to `https://localhost:9000` and you'll see the standard Gatsby's welcome page.
 
-Edit `gatsby-config.js` file and change the metadata. Basically change:
+## Start the configuration
+
+First, lets configure the blog metadata to make it more SEO friendly. Edit `gatsby-config.js` file and change the metadata:
 
 - The `siteMetadata.title`
 - The `siteMetadata.description`
@@ -47,6 +51,7 @@ Edit `gatsby-config.js` file and change the metadata. Basically change:
   - Add a `shortname`
 
 ```js
+// gatsby-config.js
 module.exports = {
   plugins: [
     //...
@@ -66,7 +71,9 @@ module.exports = {
 };
 ```
 
-## Install plugins
+For the first part, I'll be editing the `gatsby-config.js` file **a lot**. So don't forget that it is in the root of the project 😄.
+
+## Install and configure plugins
 
 I could start writing JSX files with content for my site right away, but I want to add some features that will make it more performant and make my life easier as a writer. So I'll be installing
 
@@ -74,13 +81,13 @@ I could start writing JSX files with content for my site right away, but I want 
 - A plugin the embeds `SVG` files instead of referencing them
 - A plugin to convert `markdown` into `html` so I can write my posts as `.md` files
 - A plugin to make the images in the markdown posts more performant and SEO friendly
-- A plugin that allows me to use jxs inside markdown files.
+- A plugin that allows me to use `jxs` inside markdown files (this files are called `mdx` files)
 
-### SASS Plugin
+### SASS, Google Fonts and Bootstrap
 
 I'm going to use SASS instead of CSS to style the site.
 
-For that I'll need to install my first Gatsby extension: `gatsby-plugin-sass`, but for that extension to work, I need to install also `node-sass`.
+For that I'll need to install my first Gatsby extension: `gatsby-plugin-sass`, and for that extension to work, I need to install also `node-sass`.
 
 To install both, I issue the command:
 
@@ -97,6 +104,7 @@ npm install --save gatsby-plugin-google-fonts
 And in `gasby-config.js` add the following in the `plugins` section:
 
 ```js
+// gatsby-config.js
 module.exports = {
   plugins: [
     // ...
@@ -116,11 +124,15 @@ Now, I'm also going to use some Bootstrap's mixins, so I need to install that to
 
 ```bash
 npm install --save boostrap
+mv src/components/layout.css src/components/layout.scss
 ```
 
-And I'll replace the content of `src/components/layout.scss` with
+> The `mv` command is to rename the default styling file
+
+And I'll **replace** the content of `src/components/layout.scss` with
 
 ```scss
+// src/components/layout.scss
 @import "~bootstrap/scss/functions.scss";
 @import "~bootstrap/scss/variables.scss";
 @import "~bootstrap/scss/mixins.scss";
@@ -128,19 +140,19 @@ And I'll replace the content of `src/components/layout.scss` with
 @import "~bootstrap/scss/type.scss";
 
 html {
-  font-size: 18px;
+  font-size: 18px; // This will be the base font size
 }
 ```
 
-That will give me access to all the Boostrap mixins, reset the browser styles and also change the default font size.
+That will give me access to all the _Boostrap_ `mixins`, reset the browser styles and also change the default font size.
 
 > Note: this is not the complete styling. This just shows the parts of bootstrap that I'll be using.
 
 ### SVG embed plugin
 
-The _gatsby-default-starter_ comes with `gastsby-images-sharp` plugin installed by default, which is great since it helps you to compress and manage images in a very SEO friendly way.
+The `gatsby-default-starter` comes with `gastsby-images-sharp` plugin installed by default, which is great since it helps you to [compress and manage images](https://github.com/lovell/sharp) in a very SEO friendly way.
 
-One thing that `gatsby-plugin-sharp` doesn't manage is the inclusion of SVG images inside your content. It only manages `.jpg` and `.png`.
+One thing that `gatsby-plugin-sharp` doesn't manage is the **inclusion of SVG images inside your content**. It only manages `.jpg` and `.png` compression and conversion.
 
 So, I'm going to use a new plugin that does just that... _include svg images inside the content_:
 
@@ -148,9 +160,10 @@ So, I'm going to use a new plugin that does just that... _include svg images ins
 npm install --save gatsby-plugin-react-svg
 ```
 
-And in `gastby-config.js` I have to add the follogin in the `plugins` section:
+And in `gastby-config.js` I have to add the following in the `plugins` section:
 
 ```js
+// gatsby-config.js
 module.exports = {
   plugins: [
     // ...
@@ -168,7 +181,9 @@ module.exports = {
 
 This way, every time I `import` an SVG file in a component, Gatsby will include the code of the SVG instead of referencing it using `<img src="...">`.
 
-### Remark plugin
+This takes care of styling the blog (which we haven't started yet). Now lets make Gatsby understand Markdown.
+
+### Markdown
 
 JSX is pretty easy to use since is very similar to html, and if you are just adding content, its not far fetched to use it as the format for writing copy.
 
@@ -185,6 +200,7 @@ npm install --save gatsby-transformer-remark
 An in `gastby-config.js` in the plugins section I'll add
 
 ```js
+// gatsby-config.js
 module.exports = {
   plugins: [
     {
@@ -205,7 +221,7 @@ The reason for that is that I'll be needing to configure additional Gastby plugi
 
 ### Add images to Markdown files plugin
 
-The Gatsby's `gatsby-transformer-remark` plugin, converts markdown files to html very efficiently. But it doesn't take care of the images. Specially local images that the `sharp` plugin has compressed and make more seo friendly.
+The Gatsby's `gatsby-transformer-remark` plugin, converts markdown files to html very efficiently. But it doesn't take care of the images. Specially local images that the `sharp` plugin has compressed and make more SEO friendly.
 
 So I'll be using the `gatsby-remark-images` **remark** plugin to insert images in the blog posts.
 
@@ -215,11 +231,12 @@ npm install --save gatsby-remark-images
 
 This is one of the more cool Gatsby plugins out there. Not only insert images in markdown, but it compresses them and creates SVG equivalents for placeholder content. Also takes care of lazy loading and a bunch of cool stuff.
 
-Take a look at the documentation [here](https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-remark-images) so you get a better idea of what you are getting here.
+Take a look at the documentation [here](https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-remark-images) so you get a better idea of what you are getting.
 
-With the plugins installed, lets configure it in the empty array we left in the previous step. That means that we have to edit `gatsby-config.js` agian:
+With the plugins installed, lets configure it in the empty array we left in the previous step. That means that we have to edit `gatsby-config.js` again:
 
 ```js
+// gatsby-config.js
 module.exports = {
   plugins: [
     //...
@@ -251,7 +268,7 @@ A short explanation of what I did here is:
 
 ### Adding Code Highlighting plugin
 
-My site will be a developing site, that means that I'll be creating articles that will have source code inside it. So I'll need a plugin that converts source code snippets into something beautiful to see.
+My site will focus on development, tutorials and how-tos. That means that I'll be creating articles that will have source code inside it. So I'll need a plugin that converts source code snippets into something beautiful to see.
 
 The `prismjs` plugin does just that. Converts code snippets into colored content. Also I'll need a nice theme for that highlighting.
 
@@ -264,6 +281,7 @@ npm install --save gatsby-remark-prismjs prismjs prism-themes
 And again, lets do some configuration in `gatsby-config.js` by adding the following options INSIDE the options `gatsby-transformer-remark`
 
 ```js
+// gatsby-config.js
 module.exports = {
   // ...
   plugins: [
@@ -293,33 +311,37 @@ module.exports = {
 };
 ```
 
-This `Prismjs` plugin requires css files to colorize the code. So we also need to modify the `gatsby-browser.js` file to include this css.
+... Now, lets edit a NEW FILE!.
 
-We just need to add the following 3 lines to the file
+This Prismjs plugin requires css files to colorize the code. So we also need to modify the `gatsby-browser.js` file to include this css.
+
 
 ```js
+// gatsby-browser.js
 require("prism-themes/themes/prism-material-oceanic.css");
 require("prismjs/plugins/line-numbers/prism-line-numbers.css");
 require("prismjs/plugins/command-line/prism-command-line.css");
 ```
+We just need to add this 3 lines to the file, and that's it.
 
 ### Add MDX support plugin
 
-The most used mdx plugin in Gatsby is `gatsby-mdx` which allows you to write your page files using [mdx](https://mdxjs.com/) instead for `jsx`. But that is not what I need for this portfolio site.
+So I'm lazy... Most of the developers are...
 
-For this site what I want is to write the portfolio files in mdx and have the nodes be created programatically. So I'll be needing a transformer plugin instead.
+So I don't whant to use JSX for pages with a lot of copy (like the about page), I want something more simple and easier to write. That's why I'm going to use MDX instead of JSX!
 
-Fortunately there is [`gatsby-transformer-mdx`](https://github.com/karolis-sh/gatsby-mdx/tree/master/packages/gatsby-transformer-mdx) that allows me to query `mdx` files and create pages programmatically.
 
-So I need to install it:
+If you don't knwo, MDX is JSX inside Markdown!. If you want to know more head to [the official MDX site](https://mdxjs.com/).
+
 
 ```bash
-npm install --save gatsby-transformer-mdx
+npm install --save gatsby-plugin-mdx @mdx-js/mdx @mdx-js/react
 ```
 
 And configure it in `gatsby-config.js` inside the plugins array
 
 ```js
+// gatsby-config.js
 module.exports = {
   // ...
   plugins: [
@@ -329,7 +351,35 @@ module.exports = {
 };
 ```
 
+This plugin requires no configuration, so that only line is what's needed.
+
 > Note: This plugin requires some configuration in the `gatsby-node.js` file. See the section about creating pages programmatically below
+
+### Sitemaps
+
+I want my site to be indexed by Google and the index should be fast. So I need a site-map creation plugin.
+
+Also, I want to create a `robots.txt` file when I build the site...
+
+The `gatsby-plugin-sitemap` and `gatsby-plugin-robots-txt` do just that. Create sitemaps and support robots.txt files
+
+```bash
+npm install --save gatsby-plugin-sitemap gatsby-plugin-robots-txt
+```
+
+And aging... edit `gatsby-config.js`
+
+```js
+// gatsby-config.js
+module.exports = {
+  // ...
+  plugins: [
+    // ...
+    `gatsby-plugin-sitemap`,
+    `gatsby-plugin-robots-txt`
+  ]
+};
+```
 
 !!! We're done!!!... (with the configuration). Now lets start with the development itself.
 
