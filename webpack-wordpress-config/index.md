@@ -7,7 +7,7 @@ date: 2019-10-28
 
 # Using Webpack to compile Javascript in an Wordpress Plugin
 
-So, the future of WordPress is Javascript!
+So JavaScriopt is the future of the web, and that's [not just me saying][https://www.youtube.com/watch?v=KrZx4IY1IgU&feature=emb_title], everybody is saying it.
 
 Just look at Guttemberg, the new editor for WordPress... Is completelly written using React which is a JavaScript framework if you didn't knew (how com you did'nt knew????).
 
@@ -80,15 +80,18 @@ Lets just edit the _scritps_ section replacing the _test_ script with the follow
 }
 ```
 
-And I'll test that
+And I'll test that to see if it works:
 
 ![Run webpack and get an error](webpack-start-error.png)
 
 ERORR!!! You didn't tought it was going to be that easy, right?
 
-## WebPack config
+It doesn't work because we are not using standard conventions and we don't have still any file to pack
 
-We have to instruct webpack what to bundle, how to bundle it and where to put it. That's why we need to create the `webpacka.config.js` file.
+
+## WebPack Configuration
+
+We have to instruct webpack what to bundle, how to bundle it and where to put it. That's why we need to create the `webpack.config.js` file.
 
 > You can use parammeters in the command line to instruct webpack to do all that, but there are so many that is not practical to do it that way.
 
@@ -117,11 +120,11 @@ myFunction()
 
 ![Execute Webpack with success](webpack-start-success.png)
 
-If you look into `js/main.js` you'll see a javascript file with a bunch of jiberish and at the end the `frontend.js starting file` content at the end
+If you look into `js/main.js` you'll see a javascript file with a bunch of giberish and at the end the `frontend.js starting file` content at the end
 
 ![Frontend compiled with webpack](frontend-compiled.png)
 
-Now we have webpack working and correctly
+Now we have webpack working and correctly and we just created our first pack.
 
 ## Bundling assets
 
@@ -221,10 +224,10 @@ What I'm doing here is:
 
 - Loking for `js` files with the regular expresions `/\.js$/`
 - Excluding the `node_modles` folder
-- pasing those files trough the `babel-loader`
-- Enjoing 😉
+- Pasing those files trough the `babel-loader` so the get converted
+- Enjoying 😉
 
-Now the output file, which is `js/frontend.js` will be compiled from ES5 to an version that is more compatible.
+Now the output file, which is `js/frontend.js` will be compiled from ES6 to an version that is more compatible.
 
 ![Test arrow function transpiling](test-babel-loader.png)
 
@@ -232,7 +235,7 @@ Look at that! No arrow function but a regular function.
 
 ## Develop vs Build
 
-Aren't you anoyed by the warning
+¿Aren't you anoyed by the warning?
 
 ```text
 WARNING in configuration
@@ -242,9 +245,9 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 
 I am.
 
-To get rid of that we have to change `package.json` and modify the `start` script to pass the flag `mode`. And while we're at it, lets add the `watch` flag.
+To get rid of that we have to tell webpack that we are workgin either with _development_ or _production_ mode. And for that we need to change the `package.json` file. Secifically, we need to modify the `start` script to pass the flag `mode` like so.
 
-```json
+```json{4}
 // package.json
 {
   // ...
@@ -256,24 +259,225 @@ To get rid of that we have to change `package.json` and modify the `start` scrip
 }
 ```
 
-Did I forgot to mention that also I'll be creating a **production** mode? Upss.
-
 ![Webpack modes](webpack-modes.png)
 
-If you look closely, you can see that there is a `production` mode and and a `start` (or development) mode AND that the **development mode hangs in the terminal**.
 
-That's because I configured webpack's development mode to keep watching the files for changes. Which means that if you change any file in the `src/js` folder will compile immediatelly!.
+If you look closely, you can see that **development mode hangs in the terminal**.
 
-Isn't that special...
+That's because I configured webpack's development mode to keep watching the files for changes by passing also the `--watch` parammeter. Which means that if you change any file in the `src/js` folder will compile immediatelly!.
+
+¿Isn't that special?... We don't need to keep isuing the `npm start` command all the time. We just now have to create change and webpack will compile them immediatelly.
+
+I also created a new script called `build` without the `--watch` flag to be able to compile our files without blocking the terminal.
 
 ## SASS
 
+Enought about JS for now. Lets dig into css and sass bundling. But not only bundling but conversion and generation of CSS from SASS.
+
+As always, it all begins by installing new packages:
+
 ```bash
-npm install sass-loader node-sass extract-loader file-loader --save-dev
+npm install --save-dev node-sass sass-loader css-loader postcss-loader mini-css-extract-plugin
 ```
 
-Also, lets add `babel` so we can write our javascript using ES6 and have it compile to a format more compatible with older browsers:
+Now, lets make a test SASS file in `src/sass/main.scss` with the contents:
 
-## Multiple entry points
+```sass
+// src/sass/main.scss
+$body-bg: blue;
 
-...
+body {
+    background-color: $body-bg;
+}
+```
+
+And include that file in our `src/js/frontend.js` file
+
+```js{3}
+// src/js/frontend.js
+import './shared';
+import '../sass/main.scss';
+
+const myFunction = () => {
+  console.log("frontend.js starting file")
+}
+myFunction()
+```
+
+We also have to instruct webpack to find `.scss` files, convert them to `css` and then save them in the `css/` directory:
+
+```js{20-33,36-41}
+// webpack.config.js
+const path = require("path")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+  entry: {
+    frontend: "./src/js/frontend.js",
+  },
+  output: {
+    filename: "[name].js",
+    path: path.resolve(__dirname, "js"),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV == 'development'
+            }
+          },
+          'css-loader',
+          'sass-loader' // loading order is inverse
+        ]
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../css/[name].min.css', // Relative to output path.
+      chunkFilename: '[id].css',
+    }),
+  ]
+}
+```
+
+![Compile SASS](compile-sass.png)
+
+## PostCSS
+
+PostCSS plugins used:
+
+- https://github.com/postcss/postcss-import
+- https://github.com/robwierzbowski/node-pixrem
+- https://github.com/postcss/autoprefixer
+- https://github.com/cssnano/cssnano
+
+```bash
+npm install --save-dev postcss-loader postcss-import pixrem autoprefixer cssnano
+```
+
+```js{18}
+// webpack.config.js
+// ...
+module.exports = {
+  // ...
+  module: {
+    // ...
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV == 'development'
+            }
+          },
+          'css-loader',
+          'postcss-loader',
+          'sass-loader' // loading order is inverse
+        ]
+      }
+    ]
+  },
+  plugins: [
+    // ...
+  ]
+}
+```
+
+```json
+// package.json
+{
+  // ...
+  "devDependencies": {
+    // ...
+  },
+  "postcss": {
+    "map": false,
+    "plugins": {
+      "cssnano": {},
+      "autoprefixer": {},
+      "pixrem": {},
+      "postcss-import": {}
+    }
+  }
+}
+```
+
+## Using images:
+
+```bash
+npm install --save-dev file-loader imagemin-webpack-plugin
+```
+
+```js
+// webpack.config.js
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ImageminPlugin = require("imagemin-webpack-plugin").default;
+
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            outputPath: "../images/",
+            name: "[name].[ext]"
+          }
+        }
+      }
+    ]
+  },
+  plugins: [
+    // ...
+    new ImageminPlugin({
+      pngquant: {
+        quality: "95-100"
+      },
+      cacheFolder: "./imgcache"
+    })
+  ]
+};
+```
+
+```js{4}
+// src/js/frontend.js
+import "./shared";
+import "../sass/main.scss";
+import "../images/nathan-dumlao.jpg";
+
+const myFunction = () => {
+  console.log("frontend.js start");
+};
+myFunction();
+```
+
+## Develop vs Build
+
+```json
+  "scripts": {
+    "start": "webpack --mode=development --watch",
+    "build": "webpack --mode=production",
+
+  },
+```
+
+## Final words
+
+https://github.com/marioy47/webpack-wordpress-starter
+
+
