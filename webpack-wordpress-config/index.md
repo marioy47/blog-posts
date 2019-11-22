@@ -7,7 +7,7 @@ date: 2019-10-28
 
 # Using Webpack to compile Javascript in an Wordpress Plugin
 
-So JavaScriopt is the future of the web, and that's [not just me saying][https://www.youtube.com/watch?v=KrZx4IY1IgU&feature=emb_title], everybody is saying it.
+So JavaScriopt is the future of the web, and that's [not just me saying][https://www.youtube.com/watch?v=krzx4iy1igu&feature=emb_title], everybody is saying it.
 
 Just look at Guttemberg, the new editor for WordPress... Is completelly written using React which is a JavaScript framework if you didn't knew (how com you did'nt knew????).
 
@@ -87,7 +87,6 @@ And I'll test that to see if it works:
 ERORR!!! You didn't tought it was going to be that easy, right?
 
 It doesn't work because we are not using standard conventions and we don't have still any file to pack
-
 
 ## WebPack Configuration
 
@@ -194,9 +193,9 @@ So lets install it with:
 npm install --save-dev babel-loader @babel/core @babel/cli @babel/preset-env
 ```
 
-Anc change `webpack.config.js` to include it in the bundling process:
+Anc change `webpack.config.js` to include a `modules` section and inside that section a `rules` section that will instruct webpack how to handles `.js` files:
 
-```js{15,20}
+```js{12-20}
 // webpack.config.js
 const path = require("path")
 
@@ -247,7 +246,7 @@ I am.
 
 To get rid of that we have to tell webpack that we are workgin either with _development_ or _production_ mode. And for that we need to change the `package.json` file. Secifically, we need to modify the `start` script to pass the flag `mode` like so.
 
-```json{4}
+```json{5}
 // package.json
 {
   // ...
@@ -261,8 +260,7 @@ To get rid of that we have to tell webpack that we are workgin either with _deve
 
 ![Webpack modes](webpack-modes.png)
 
-
-If you look closely, you can see that **development mode hangs in the terminal**.
+If you look closely, you can see that **development mode freezes in the terminal**.
 
 That's because I configured webpack's development mode to keep watching the files for changes by passing also the `--watch` parammeter. Which means that if you change any file in the `src/js` folder will compile immediatelly!.
 
@@ -295,8 +293,8 @@ And include that file in our `src/js/frontend.js` file
 
 ```js{3}
 // src/js/frontend.js
-import './shared';
-import '../sass/main.scss';
+import "./shared"
+import "../sass/main.scss"
 
 const myFunction = () => {
   console.log("frontend.js starting file")
@@ -306,10 +304,10 @@ myFunction()
 
 We also have to instruct webpack to find `.scss` files, convert them to `css` and then save them in the `css/` directory:
 
-```js{20-33,36-41}
+```js{20-32,35-40}
 // webpack.config.js
 const path = require("path")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
 module.exports = {
   entry: {
@@ -332,21 +330,21 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: process.env.NODE_ENV == 'development'
-            }
+              hmr: process.env.NODE_ENV == "development",
+            },
           },
-          'css-loader',
-          'sass-loader' // loading order is inverse
-        ]
+          "css-loader",
+          "sass-loader", // loading order is inverse
+        ],
       },
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '../css/[name].min.css', // Relative to output path.
-      chunkFilename: '[id].css',
+      filename: "../css/[name].min.css", // Relative to output path.
+      chunkFilename: "[id].css",
     }),
-  ]
+  ],
 }
 ```
 
@@ -421,9 +419,9 @@ npm install --save-dev file-loader imagemin-webpack-plugin
 
 ```js
 // webpack.config.js
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const ImageminPlugin = require("imagemin-webpack-plugin").default;
+const path = require("path")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const ImageminPlugin = require("imagemin-webpack-plugin").default
 
 module.exports = {
   // ...
@@ -436,34 +434,34 @@ module.exports = {
           loader: "file-loader",
           options: {
             outputPath: "../images/",
-            name: "[name].[ext]"
-          }
-        }
-      }
-    ]
+            name: "[name].[ext]",
+          },
+        },
+      },
+    ],
   },
   plugins: [
     // ...
     new ImageminPlugin({
       pngquant: {
-        quality: "95-100"
+        quality: "95-100",
       },
-      cacheFolder: "./imgcache"
-    })
-  ]
-};
+      cacheFolder: "./imgcache",
+    }),
+  ],
+}
 ```
 
 ```js{4}
 // src/js/frontend.js
-import "./shared";
-import "../sass/main.scss";
-import "../images/nathan-dumlao.jpg";
+import "./shared"
+import "../sass/main.scss"
+import "../images/nathan-dumlao.jpg"
 
 const myFunction = () => {
-  console.log("frontend.js start");
-};
-myFunction();
+  console.log("frontend.js start")
+}
+myFunction()
 ```
 
 ## Develop vs Build
@@ -479,5 +477,3 @@ myFunction();
 ## Final words
 
 https://github.com/marioy47/webpack-wordpress-starter
-
-
