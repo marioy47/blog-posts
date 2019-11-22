@@ -275,7 +275,7 @@ Enought about JS for now. Lets dig into css and sass bundling. But not only bund
 As always, it all begins by installing new packages:
 
 ```bash
-npm install --save-dev node-sass sass-loader css-loader postcss-loader mini-css-extract-plugin
+npm install --save-dev node-sass sass-loader css-loader mini-css-extract-plugin
 ```
 
 Now, lets make a test SASS file in `src/sass/main.scss` with the contents:
