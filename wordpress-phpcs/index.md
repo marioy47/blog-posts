@@ -1,12 +1,15 @@
 ---
 title: Using PHP_CodeSniffer to manage coding standards for WordPress Development
+tags: phpcs, phpcbf, wordpress, vscode, composer, php
 ---
 
 # Using PHP_CodeSniffer to manage coding standards for WordPress Development
 
 ## Start the project
 
-    composer init
+```bash
+composer init
+```
 
 I didn't defined dependencies just yet.
 
@@ -71,7 +74,7 @@ Add the following in the **scripts** section in `composer.json`
   "scripts": {
     // Add this three commands.
     "phpcs": "phpcs",
-    "phpcs-i": "phpcs -i",
+    "phpcsi": "phpcs -i",
     "phpcbf": "phpcbf"
   }
 }
@@ -80,7 +83,7 @@ Add the following in the **scripts** section in `composer.json`
 To validate that you have installed all the required standards you should execute `phpcs -i` but since we have _phpcs_ installed only locally we created the `composer phpcs-i` command. That will list the **locally** installed standards.
 
 ```shell
-$ composer phpcs-i
+$ composer phpcsi
 > phpcs -i
 The installed coding standards are PEAR, Zend, PSR2, MySource, Squiz, PSR1, PSR12, PHPCompatibility, PHPCompatibilityParagonieRandomCompat, PHPCompatibilityParagonieSodiumCompat, PHPCompatibilityWP, VariableAnalysis, WordPress, WordPress-Extra, WordPress-Docs and WordPress-Core
 ```
