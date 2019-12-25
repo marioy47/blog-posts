@@ -1,5 +1,6 @@
 ---
 title: Configure PHP_CodeSniffer and Visual Studio Code to manage coding standards for WordPress Development
+date: 2019-12-25
 tags: phpcs, phpcbf, wordpress, vscode, composer, php
 ---
 
