@@ -1,9 +1,9 @@
 ---
-title: Configure PHP_CodeSniffer to manage coding standards for WordPress Development
+title: Configure PHP_CodeSniffer and Visual Studio Code to manage coding standards for WordPress Development
 tags: phpcs, phpcbf, wordpress, vscode, composer, php
 ---
 
-# Configure PHP_CodeSniffer to manage coding standards for WordPress Development
+# Configure PHP_CodeSniffer and Visual Studio Code to manage coding standards for WordPress Development
 
 In this article I'll try to show you how to setup a development environment for a WordPress plugin that follows the WordPress coding standards.
 
