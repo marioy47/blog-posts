@@ -127,7 +127,13 @@ As you can see, by default the inventory file, and most other `ansible` files, a
 
 Lets start by executing a remote command on each of the hosts (in our case just two) that we have in our inventory.
 
-Lets execute the command `hostname` to determine the host's name on the server `client1` and server `client2`.
+The structure an `ansible`  command is
+
+```bash
+ansible -i <inventory-file.yml> <pattern or host> -m <module to use> -a <command in the module>
+```
+
+So lets execute the command `hostname` to determine the host's name on the server `client1` and server `client2`.
 
 On the **Mac** terminal execute:
 
@@ -138,8 +144,9 @@ ansible -i inventory.yml all -a "hostname"
 ![Ansible ad-hoc command result](ansible-ad-hoc-hostname.png)
 
 Here:
+- We're using the `inventory.yml` file. Hence the `-i` parameter.
 - `all` means "Use the pattern `all`" which is the default **group** for all the clients in the inventory. More on patters latter.
-- `-a` means "arguments" and since we haven't specified any module (again, more on modules and commands latter), Ansible will assume we are using the `command` module with the parameter `hostname`.
+- `-a` means "arguments" and since we haven't specified any module (again, more on modules and commands latter), Ansible will assume we are using the [`command`](https://docs.ansible.com/ansible/latest/modules/command_module.html#command-module) module with the parameter `hostname`.
 
 ![Image of error executing hostname](error-ansible-hostname.png)
 
@@ -171,7 +178,8 @@ ansible -i inventory.yml all -u testuser -m ping
 
 ![Image of ansible ping](ansible-ping.png)
 
-- `-m` means "Use the module ..." and we are using the module [ping](https://docs.ansible.com/ansible/latest/modules/ping_module.html)
+- `-m` means "Use the module ..." and we are using the module [ping](https://docs.ansible.com/ansible/latest/modules/ping_module.html).
+- There is no `-a` option because the `ping` module does not requires it.
 
 Take into account that the _module_ `ping` is **not** the ping command. From the Ansible documentation:
 > This is NOT ICMP ping, this is just a trivial test module that requires Python on the remote-node
@@ -236,6 +244,7 @@ testgroup:
   hosts:
     client1:
     client2:
+
 ```
 
 Here we created the `testgroup` group (or pattern) and that group has two hosts `client1` and `client2`.
@@ -259,7 +268,7 @@ The thing to remember with Ansible variables are that they are flattened out so 
 
 With what we've seen so far, we can say that we can specify variables by _host_, by _group_ or both.
 
-1. By host
+#### 1. By host
 
 ```yml
 # inventory.yml
@@ -269,7 +278,7 @@ testgroup:
       my_custom_string: Hola Mundo
 ```
 
-2. By group
+#### 2. By group
 
 ```yml
 # inventory.yml
@@ -281,7 +290,7 @@ testgroup:
       my_custom_string: Hola Mundo
 ```
 
-3. Combined:
+#### 3. Combined:
 ```yml
 # inventory.yml
 testgroup:
@@ -300,6 +309,8 @@ ansible testgroup -u testgroup -a "echo {{my_custom_string}}"
 ```
 
 ![Image of ansible vars in action](ansible-vars-custom-string.png)
+
+Awesome! We can now specify global parameters and variables depending on the host or the gruop.
 
 ## Advanced variables
 
@@ -357,7 +368,9 @@ As you can see, the `my_custom_string` has different values in each client. On `
 
 ## Special variables
 
-Now that we know about variables, wouldn't it be nice if we could store the username and password to a remote host in a variable file instead of passing it in the command line? Well... you can!
+Now that we know about variables, wouldn't it be nice if we could store the username and password to a remote host in a variable file instead of passing it in the command line?
+
+...Well ...you can!
 
 Ansible has set of [special variables](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#connecting-to-hosts-behavioral-inventory-parameters) that can be used for instances like that.
 
@@ -392,6 +405,8 @@ ansible all -a "whoami"
 
 I bet that you already figured out that `ansible_user` is the username we use for connecting to the remote server, and that `ansible_become` tells Ansible to become the super user on the remote machine.
 
+Also you've might noticed that I combined the usage of variables inside the `inventory.yml` and `gruop_vars/testgroup.yml`. I could have added the `ansible_user` var inside the `inventory.yml` file also.
+
 > You could use the `group_vars/testgroup.yml` file for sensitive data that can not be committed to a repo by adding it to `.gitignore`.
 
 ## Managing files
@@ -399,7 +414,7 @@ With Ansible you can also copy files to the remote machines.... And not only tha
 
 ### Copying a file
 
-You can copy files directly with the `copy` module...
+You can copy files directly with the [`copy`](https://docs.ansible.com/ansible/latest/modules/copy_module.html) module...
 
 ```bash
 mkdir files/
@@ -411,7 +426,7 @@ ansible all -a "ls -l /tmp/new-file.txt"
 
 ### Coping and parsing a template
 
-You can also create files with variables inside them that get parsed after uploading them.
+You can also create files with variables inside them that get parsed after uploading them with the [`template`](https://docs.ansible.com/ansible/latest/modules/template_module.html) module.
 
 ```bash
 # Create the template
@@ -439,6 +454,8 @@ ansible all -a "ls -l /tmp/new-file.txt"
 ```
 
 ![Chmod a remote file](chmod-with-file.png)
+
+> The `copy` and `template` modules allow you to upload files and change the owner at the same time.
 
 ## Installing packages
 
@@ -582,7 +599,8 @@ The usage of the `debug` option almost always requires you to store the output o
     - name: A test command
       command: cat /etc/hostname
       register: _command
-    - debug: msg={{ _command.stdout }}
+    - debug:
+      msg: {{ _command.stdout }}
 ```
 
 ![Ansible playbook debug example](ansible-playbook-debug.png)
@@ -607,12 +625,13 @@ Take the following example:
       command: which does-not-exists
     - name: this command should not be executed
       command: echo hola mundo
-    - debug: msg="finished the execution"
+    - debug:
+      msg: "finished the execution"
 ```
 
 You can see that the `debug` section never gets executed.
 
-![Playbook without ignoring errores](playbook-errors-not-ignored.png)
+![Playbook without ignoring errors](playbook-errors-not-ignored.png)
 
 But if we add `ignore_errors: True` on the playbook.
 
@@ -627,7 +646,8 @@ But if we add `ignore_errors: True` on the playbook.
       ignore_errors: True
     - name: this command should not be executed
       command: echo hola mundo
-    - debug: msg="finished the execution"
+    - debug:
+      msg: "finished the execution"
 ```
 
 ![Playbook with ignored errors](playbook-errors-ignored.png)
