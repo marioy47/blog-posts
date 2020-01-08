@@ -6,6 +6,8 @@ tags: linux, windows, ssh, winrt, ansible, sysadmin
 
 # Ansible introduction for developers
 
+> All the code in this article can be found in [GitHub](https://github.com/marioy47/ansible-testlab) along a very simple Vagrant test lab.
+
 So you need to setup _yet another_ LEMP (Linux, Nginx, MariaDB, PHP) server on Digital Ocean or EC2 that also includes additional services like a [Redis](https://redis.io/) cache and [Letsencrpyt](https://certbot.eff.org/) for SSL certificate creation.
 
 ... Or maybe you need to setup a new development environment using [Vagrant](https://www.vagrantup.com/) or [Docker](https://www.docker.com/) that has that same LEMP stack with those same services.
