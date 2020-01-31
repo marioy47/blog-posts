@@ -5,16 +5,15 @@ tags: npm, node, gulp, webpack, javascript, scss, sass, css
 ---
 # Use Gulp and Webpack together for you asset bundling needs
 
-I [love Webpack](https://marioyepes.com/posts/webpack-wordpress-config/), it allows me to bundle scripts in just one file. And if you use it with [babel](https://babeljs.io/) you can use next generation javascript syntax and make it compatible with older browsers.
+I [love Webpack](https://marioyepes.com/posts/webpack-wordpress-config/), it allows me to bundle scripts in just one file. And if you par it with [babel](https://babeljs.io/) you can use next generation javascript syntax and still make your scripts compatible with older browsers.
 
-The fact of the matter is that if you are going to create a full stack javascript project, you CAN NOT use webpack...
+The fact of the matter is that if you are going to create a full stack javascript project, you HAVE TO use webpack...
 
 But there is a problem... Webpack is not design for task automation, even though it can do them.
 
 For tasks automation, I still think there is no better tool than [gulp](https://gulpjs.com/). Specially when we want to compile SASS files, create zip archives, or deploy code on remote servers.
 
 So here, i'm going to show you have to use gulp for task automation with the following tasks
-
 
 - One tasks to compile SASS files into CSS files
 - One tasks to _compile js files with webpack_
@@ -86,10 +85,10 @@ As you can see, this are very basic files, but enough for testing our setup.
 Now that we have our test files, we can start the configuration. This are the steps we are going to follow:
 
 - Start npm's package.json file
-- Install and configure gulp
+- Install and configure `gulp`
 - Install and configure a sass compiler
-- Install and configure webpack
-- Install babel and configure it with webpack
+- Install and configure `webpack`
+- Install `babel` and configure it with webpack
 - Configure webpack in gulp
 
 
